@@ -1,0 +1,19 @@
+{
+  "name": "passportlogin",
+  "version": "1.0.0",
+  "description": "Simple user authentication app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aerone-wizy/expressjspassportlogin.git"
+  },
+  "author": "aerone",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aerone-wizy/expressjspassportlogin/issues"
+  },
+  "homepage": "https://github.com/aerone-wizy/expressjspassportlogin#readme"
+}
