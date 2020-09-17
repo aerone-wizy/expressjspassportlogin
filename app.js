@@ -2,7 +2,8 @@ const express = require('express');
 const path = require('path')
 const bodyParser = require('body-parser')
 const exphbs = require('express-handlebars')
-const expressValidator = require('express-validator')
+const _handlebars = require('handlebars')
+const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 const flash = require('connect-flash')
 const session = require('express-session')
 const passport = require('passport')
@@ -17,7 +18,7 @@ const port = 3000
 const index = require('./routes/index')
 
 //Sets our app to use the handlebars engine
-app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
+app.engine('handlebars', exphbs({ defaultLayout: 'main', handlebars: allowInsecurePrototypeAccess(_handlebars)}));
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'handlebars');
 
@@ -44,6 +45,8 @@ app.use(flash())
 app.use((req, res, next) => {
     res.locals.success_msg = req.flash('success_msg')
     res.locals.error_msg = req.flash('error_msg')
+    res.locals.error = req.flash('error')
+    res.locals.user = req.user || null
     next()
 })
 

@@ -30,3 +30,19 @@ module.exports.registerUser = (newUser, callback) => {
         })
     })
 }
+
+module.exports.getUserByUsername = (username, callback) => {
+    const query = { username: username }
+    User.findOne(query, callback)
+}
+
+module.exports.getUserById = (id, callback) => {
+    User.findById(id, callback)
+}
+
+module.exports.comparePassword = (candidiatePassword, hash, callback) => {
+    bcrypt.compare(candidiatePassword, hash, (err, isMatch) => {
+        if(err) throw err
+        callback(null, isMatch)
+    })
+}

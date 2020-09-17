@@ -2,12 +2,12 @@ const express = require('express')
 const router = express.Router()
 const { body, validationResult } = require('express-validator');
 const passport = require('passport')
-const LocalStartegy = require('passport-local').Strategy
+const LocalStrategy = require('passport-local').Strategy
 
 const User = require('../models/user')
 
-//Homepage
-router.get('/', (req, res, next) => {
+//Homepage - Dashboard
+router.get('/', ensureAuthenticated, (req, res, next) => {
     res.render('index')
 })
 
@@ -19,6 +19,13 @@ router.get('/login', (req, res, next) => {
 //Register Form
 router.get('/register', (req, res, next) => {
     res.render('register')
+})
+
+//Logout
+router.get('/logout', (req, res, next) => {
+    req.logout()
+    req.flash('success_msg', "You are now logged out")
+    res.redirect('/login')
 })
 
 //Process Register
@@ -49,7 +56,12 @@ router.post('/register', [
             errors: errors.array()
         })
     } else {
-        const newUser = new User({name, username, email, password})
+        const newUser = new User({
+            name: name,
+            username: username,
+            email: email,
+            password: password
+        })
         User.registerUser(newUser, (err, user) => {
             if(err) throw err
             req.flash('success_msg', 'You are registered and can now login')
@@ -93,9 +105,17 @@ router.post('/login', (req, res, next) => {
         successRedirect: '/',
         failureRedirect: '/login',
         failureFlash: true
-    }, (req, res) => {
-        res.redirect('/')
-    })
+    })(req, res)
 })
 
+
+//Access control
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()){
+        return next()
+    } else {
+        req.flash('error_msg', 'You are not authorized to view that page')
+        res.redirect('/login')
+    }
+}
 module.exports = router
